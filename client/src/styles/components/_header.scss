@@ -1,0 +1,30 @@
+// .bg-light.custom-background{
+//   background: url(./../assets/img/bg/blur-bg.jpg);
+//     background-position: center center;
+//     background-repeat: no-repeat;
+//     background-attachment: fixed;
+// }
+.cr-header {
+  margin-bottom: $spacer * .5;
+  border-bottom: $border-width solid $border-color;
+
+  &__nav-right {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  // &__notification-popover {
+  //   &.popover {
+  //     width: 320px;
+  //     max-width: 320px;
+  //     max-height: 100vh;
+  //     overflow-y: scroll;
+  //     cursor: pointer;
+  //   }
+  // }
+}
+.signoutbutton{
+  background-color: #dc6498;
+  color: #fff;
+}
