@@ -12,7 +12,6 @@ router.get('/details',(req,res)=>{
 	db
   .query(salesAndCollectionQuery, { raw: true })
   .then(projects => {
-    console.log(projects);
     res.json(projects);
   })
 	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})

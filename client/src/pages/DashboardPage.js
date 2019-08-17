@@ -12,7 +12,6 @@ import {avatarsData,chartjs,productsData,supportTicketsData,todosData,userProgre
 import React from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import {MdBubbleChart,MdInsertChart,MdPersonPin,MdPieChart,MdRateReview,MdShare,MdShowChart,MdThumbUp,} from 'react-icons/md';
-import InfiniteCalendar from 'react-infinite-calendar';
 import {Badge,Button,Card,CardBody,CardDeck,CardGroup,CardHeader,CardTitle,Col,ListGroup,ListGroupItem,Row,} from 'reactstrap';
 import { getColor } from 'utils/colors';
 
@@ -79,7 +78,7 @@ class DashboardPage extends React.Component {
     const secondaryColor = getColor('secondary');
     let value=this.state.ad_client_id;
     const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    const DAYS=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+    const DAYS=Array.from({length: 30}, (v, k) => k+1);
     const saleData=[];
     const collectionData=[];
     const deleveryQty=[];
@@ -164,6 +163,10 @@ class DashboardPage extends React.Component {
           ],
         },
       },
+      getDatasetAtEvent:(event,history)=>{
+        // browserHistory.push("/home");
+        this.props.history.push('/productiondelivery');
+      }
     };
     const genLineData = (moreData = {}, moreData2 = {}) => {
       return {
@@ -324,7 +327,7 @@ class DashboardPage extends React.Component {
             <Card>
               <CardHeader>Production vs Delivery</CardHeader>
               <CardBody>
-                <Bar data={productDeleveryData.data} options={productDeleveryData.options} />
+                <Bar data={productDeleveryData.data} options={productDeleveryData.options}  onElementsClick={(dataset)=>productDeleveryData.getDatasetAtEvent(dataset)}/>
               </CardBody>
               {/*
                 <ListGroup flush>
