@@ -10,7 +10,7 @@ import { IconWidget, NumberWidget } from 'components/Widget';
 import { getStackLineChart, stackLineChartOptions } from 'demos/chartjs';
 import {avatarsData,chartjs,productsData,supportTicketsData,todosData,userProgressTableData,} from 'demos/dashboardPage';
 import React from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar, Line , Pie ,Polar ,Bubble  } from 'react-chartjs-2';
 import {MdBubbleChart,MdInsertChart,MdPersonPin,MdPieChart,MdRateReview,MdShare,MdShowChart,MdThumbUp,} from 'react-icons/md';
 import {Badge,Button,Card,CardBody,CardDeck,CardGroup,CardHeader,CardTitle,Col,ListGroup,ListGroupItem,Row,} from 'reactstrap';
 import { getColor } from 'utils/colors';
@@ -67,7 +67,61 @@ class DashboardPage extends React.Component {
       this.setState(newState);
     })
 
+     axios.get(`/api/collection/details`)
+     .then(res => {
+       let newState={
+          ...this.state,
+          collection:res.data[0]
+        }
+      this.setState(newState);
+        // console.log(this.state);
+    })
+      axios.get(`/api/hrupdate/details`)
+      .then(res => {
+        let newState={
+           ...this.state,
+           hrupdate:res.data[0]
+         }
+       this.setState(newState);
+         // console.log(this.state);
+     })
+      axios.get(`/api/rawstor/details`)
+      .then(res => {
+        let newState={
+           ...this.state,
+           rawstor:res.data[0]
+         }
+       this.setState(newState);
+     })
+      axios.get(`/api/rawincoming/details`)
+      .then(res => {
+        let newState={
+           ...this.state,
+           rawincoming:res.data[0]
+         }
+       this.setState(newState);
+         // console.log(this.state);
+     })
+      axios.get(`/api/productionbudget/details`)
+      .then(res => {
+        let newState={
+           ...this.state,
+           productionbudget:res.data[0]
+         }
+       this.setState(newState);
+         // console.log(this.state);
+     })
+      axios.get(`/api/budgetachievement/details`)
+      .then(res => {
+        let newState={
+           ...this.state,
+           budgetachievement:res.data[0]
+         }
+       this.setState(newState);
+         // console.log(this.state);
+     })
   }
+
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
@@ -77,7 +131,7 @@ class DashboardPage extends React.Component {
     const primaryColor = getColor('primary');
     const secondaryColor = getColor('secondary');
     let value=this.state.ad_client_id;
-    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     const DAYS=Array.from({length: 30}, (v, k) => k+1);
     const saleData=[];
     const collectionData=[];
@@ -87,7 +141,44 @@ class DashboardPage extends React.Component {
     const invoiceData=[];
     const totalEmpData=[];
     const attendenceData=[];
+    const totalCollection=[];
+    const collectionDate= [];
+    const myFormatDate=[];
+    const hrDepartmentName=[];
+    const hrAttend=[];
+    const hrTotal=[];
+    const storName=[];
+    const storQty=[];
+    const rawIncomingDate=[];
+    const rawIncomingTotal=[];
+    const rawIncomingMonth=[];
+    const renderColor=[];
     let lastMonthSales='';
+    const newName=[];
+    const budgetAmount=[];
+    const bproductionQty=[];
+    const budgetDate =[];
+    const budgetProductionDate=[];
+    const salesBudget=[];
+    const salesAchievement=[];
+    const budgetTime=[];
+
+
+    const gotosalesvscollection=()=>{
+      this.props.history.push('/salesvscollection');
+    }
+    
+    const gotopurchasevsinvoice=()=>{
+      this.props.history.push('/purchasevsinvoice');
+    }
+    
+    const gotoattendance=()=>{
+      this.props.history.push('/attendance');
+    }
+    const budgetachievement=()=>{
+      this.props.history.push('/budgetachievement');
+    }
+
     if (this.state.salesOrder) {
       this.state.salesOrder.map((item)=>{
         saleData.push(item.sales);
@@ -116,6 +207,87 @@ class DashboardPage extends React.Component {
       })
     }
 
+    if (this.state.collection) {
+      this.state.collection.map((item)=>{
+        totalCollection.push(item.total_amt);
+        collectionDate.push(item.dateacct);
+      })
+      collectionDate.map((item)=>{
+        var myDate;
+        let result =item.slice(0,10); 
+        let t = result.split("-");
+        if(t[2]) {
+          myDate = new Date(t[0], t[1]-1, t[2]);
+          myFormatDate.push(MONTHS[myDate.getMonth()+1]);
+        }
+      })
+    }
+
+    if (this.state.hrupdate) {
+      this.state.hrupdate.map((item)=>{
+        hrDepartmentName.push(item.name);
+        hrTotal.push(item.employeecount);
+        hrAttend.push(item.attendcount);
+      })
+      hrDepartmentName.map((item)=>{
+        // console.log(item);
+        if (item!==null) {
+          newName.push(item.split(" ").map((i)=>i.charAt(0)).join(""));
+          // console.log('hello')
+        }
+      })
+    }
+    if (this.state.rawstor) {
+      this.state.rawstor.map((item)=>{
+        storName.push(item.storname);
+        storQty.push(item.storqty);
+        renderColor.push(`rgba(${Math.floor(Math.random() * 255)+1},${Math.floor(Math.random() * 255)+1},${Math.floor(Math.random() * 255)+1},1)`);
+      })
+    }
+    if (this.state.rawincoming) {
+      this.state.rawincoming.map((item)=>{
+        rawIncomingDate.push(item.date);
+        rawIncomingTotal.push(item.total);
+      })
+      rawIncomingDate.map((item)=>{
+        var myDate;
+        let result =item.slice(0,10); 
+        let t = result.split("-");
+        if(t[2]) {
+          myDate = new Date(t[0], t[1]-1, t[2]);
+          rawIncomingMonth.push(MONTHS[myDate.getMonth()+1]);
+        }
+      })
+    }
+
+    if (this.state.productionbudget) {
+      this.state.productionbudget.map((item)=>{
+        budgetAmount.push(item.budgetamount);
+        bproductionQty.push(item.productionqty);
+        budgetDate.push(item.date);
+      })
+      
+        budgetDate.map((item)=>{
+          if (item) {
+            var myDate;
+            let result =item.slice(0,10); 
+            let t = result.split("-");
+            if(t[2]) {
+              myDate = new Date(t[0], t[1]-1, t[2]);
+              budgetProductionDate.push(MONTHS[myDate.getMonth()+1]);
+            }
+          }
+        })
+      
+    }
+    if (this.state.budgetachievement) {
+      this.state.budgetachievement.map((item)=>{
+        salesBudget.push(item.budget);
+        salesAchievement.push(item.achievement);
+        budgetTime.push(item.name);
+      })
+    }
+
 
     const productDeleveryData={
       data: {
@@ -136,32 +308,11 @@ class DashboardPage extends React.Component {
         ],
       },
       options: {
-        title: {
-          display: false,
-          text: 'Chart.js Bar Chart - Stacked',
-        },
-        tooltips: {
-          mode: 'index',
-          intersect: false,
-        },
-        responsive: true,
-        legend: {
-          display: false,
-        },
         scales: {
-          xAxes: [
-            {
-              stacked: true,
-              display: false,
-            },
-          ],
-          yAxes: [
-            {
-              stacked: true,
-              display: false,
-            },
-          ],
-        },
+          xAxes: [{
+            fontSize: 40
+          }]
+         }
       },
       getDatasetAtEvent:(event,history)=>{
         // browserHistory.push("/home");
@@ -230,6 +381,127 @@ class DashboardPage extends React.Component {
       };
     };
 
+    const genPieData = () => {
+      return {
+        datasets: [
+          {
+            data:totalCollection,
+            backgroundColor: [
+              getColor('primary'),
+              getColor('secondary'),
+              getColor('success'),
+              getColor('info'),
+              getColor('danger'),
+            ],
+            label: 'Dataset 1',
+          },
+        ],
+        labels:myFormatDate,
+      };
+    };
+
+    const rawstordata={
+      labels:storName,
+      datasets: [
+        {
+          data:storQty,
+          backgroundColor:renderColor,
+          label: 'Dataset 1',
+        }
+      ],
+    }
+
+    const hrupdateLineData = {
+        labels: newName,
+        datasets: [
+          {
+            label: 'Total Employee',
+            backgroundColor: getColor('primary'),
+            borderColor: getColor('primary'),
+            borderWidth: 1,
+            data: hrTotal,
+            fill:false
+          },
+          {
+            label: 'Attendance Employee',
+            backgroundColor: getColor('secondary'),
+            borderColor: getColor('secondary'),
+            borderWidth: 1,
+            data: hrAttend,
+            fill:false
+          },
+        ],
+        options: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                autoSkip: false,
+                maxRotation: 90,
+                minRotation: 90
+              }
+            }]
+          }
+        }
+    };
+    const rawIncomingBubbleData= (moreData = {}, moreData2 = {}) => {
+      return {
+        labels: rawIncomingMonth,
+        datasets: [
+          {
+            label: 'Raw Incoming',
+            backgroundColor: getColor('primary'),
+            borderColor: getColor('primary'),
+            borderWidth: 1,
+            data: rawIncomingTotal,
+            ...moreData2,
+          },
+        ],
+      };
+    };
+
+    const productionBudgetData={
+      labels: budgetProductionDate,
+      datasets: [
+        {
+          label: 'Budget',
+          backgroundColor: getColor('primary'),
+          borderColor: getColor('primary'),
+          borderWidth: 1,
+          data: budgetAmount
+        },
+        {
+          label: 'Production Quantity',
+          backgroundColor: getColor('secondary'),
+          borderColor: getColor('secondary'),
+          borderWidth: 1,
+          data: bproductionQty
+        },
+      ],    
+    }
+    
+    const budgetAchievementData = (moreData = {}, moreData2 = {}) => {
+      return {
+        labels: budgetTime,
+        datasets: [
+          {
+            label: 'Budget',
+            backgroundColor: getColor('primary'),
+            borderColor: getColor('primary'),
+            borderWidth: 1,
+            data: salesBudget,
+            ...moreData,
+          },
+          {
+            label: 'Achievement',
+            backgroundColor: getColor('secondary'),
+            borderColor: getColor('secondary'),
+            borderWidth: 1,
+            data:salesAchievement,
+            ...moreData2,
+          },
+        ],
+      };
+    };
     return (
       <Page
         className="DashboardPage"
@@ -298,7 +570,7 @@ class DashboardPage extends React.Component {
                 <small className="text-muted text-capitalize">This year</small>
               </CardHeader>
               <CardBody>
-                <Bar data={genLineData} />
+                <Bar data={genLineData} onElementsClick={()=>gotosalesvscollection()} />
               </CardBody>
             </Card>
           </Col>
@@ -310,7 +582,7 @@ class DashboardPage extends React.Component {
                 <small className="text-muted text-capitalize">This year</small>
               </CardHeader>
               <CardBody>
-                <Bar data={purchaseinvoiceLineData} />
+                <Bar data={purchaseinvoiceLineData} onElementsClick={()=>gotopurchasevsinvoice()}/>
               </CardBody>
             </Card>
           </Col>
@@ -319,15 +591,16 @@ class DashboardPage extends React.Component {
             <Card>
               <CardHeader>Attendance (Total Employees : {totalEmpData[0]})</CardHeader>
               <CardBody>
-                <Bar data={Attendance({ type: 'line', fill: false })} />
+                <Bar data={Attendance({ type: 'line', fill: false })} onElementsClick={()=>gotoattendance()}/>
               </CardBody>
             </Card>
           </Col>
+
           <Col lg="6" md="12" sm="12" xs="12">
             <Card>
               <CardHeader>Production vs Delivery</CardHeader>
               <CardBody>
-                <Bar data={productDeleveryData.data} options={productDeleveryData.options}  onElementsClick={(dataset)=>productDeleveryData.getDatasetAtEvent(dataset)}/>
+                <Bar data={productDeleveryData.data}   onElementsClick={(dataset)=>productDeleveryData.getDatasetAtEvent(dataset)}/>
               </CardBody>
               {/*
                 <ListGroup flush>
@@ -351,6 +624,68 @@ class DashboardPage extends React.Component {
               */}
             </Card>
           </Col>
+
+          <Col xl={6} lg={12} md={12}>
+            <Card>
+              <CardHeader>Collection</CardHeader>
+              <CardBody>
+                <Pie data={genPieData()} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={6} lg={12} md={12}>
+            <Card>
+               <CardBody>
+                 Row Incoming
+               </CardBody> 
+               <CardBody>
+                 <Line data={rawIncomingBubbleData} />
+               </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={12} lg={12} md={12}>
+            <Card>
+              <CardHeader>HR Update</CardHeader>
+              <CardBody>
+                <Line data={hrupdateLineData} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={12} lg={12} md={12}>
+            <Card>
+              <CardHeader>RAW Store</CardHeader>
+              <CardBody>
+                <Polar data={rawstordata} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col lg="6" md="12" sm="12" xs="12">
+            <Card>
+              <CardHeader>
+                Production Vs Budget
+                <small className="text-muted text-capitalize">This year</small>
+              </CardHeader>
+              <CardBody>
+                <Bar data={productionBudgetData} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={6} lg={12} md={12}>
+            <Card>
+               <CardBody>
+                 Sales - Budget Vs Achievement
+               </CardBody> 
+               <CardBody>
+                 <Line data={budgetAchievementData()} onElementsClick={()=>budgetachievement()} />
+               </CardBody>
+            </Card>
+          </Col>
+
         </Row>
 
         

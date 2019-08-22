@@ -24,7 +24,11 @@ const ProgressPage = React.lazy(() => import('pages/ProgressPage'));
 const TablePage = React.lazy(() => import('pages/TablePage'));
 const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
 const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
-const ProductionDelivery = React.lazy(() => import('./components/ProductionDelivery'));
+const ProductionDelivery = React.lazy(() => import('./pages/ProductionDelivery'));
+const SalesvsCollection = React.lazy(() => import('./pages/SalesvsCollection'));
+const PurchasevsInvoice = React.lazy(() => import('./pages/PurchasevsInvoice'));
+const Attendance = React.lazy(() => import('./pages/Attendance'));
+const BudgetAchievement = React.lazy(() => import('./pages/BudgetAchievement'));
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
@@ -72,6 +76,10 @@ class App extends React.Component {
                 <Route exact path="/input-groups" component={InputGroupPage} />
                 <Route exact path="/charts" component={ChartPage} />
                 <Route exact path="/productiondelivery" component={ProductionDelivery} />
+                <Route exact path="/salesvscollection" component={SalesvsCollection} />
+                <Route exact path="/purchasevsinvoice" component={PurchasevsInvoice} />
+                <Route exact path="/attendance" component={Attendance} />
+                <Route exact path="/budgetachievement" component={BudgetAchievement} />
               </React.Suspense>
             </MainLayout>
             <Redirect to="/" />

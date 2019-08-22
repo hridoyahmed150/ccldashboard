@@ -23,6 +23,13 @@ app.use('/api/salesorder',require('./routs/sales_order'));
 app.use('/api/productiondelivery',require('./routs/production_deliverydate'));
 app.use('/api/purchaseinvoice',require('./routs/purchase_vs_invoice'));
 app.use('/api/employeeAttendance',require('./routs/employee_attendance'));
+app.use('/api/collection',require('./routs/collection'));
+app.use('/api/hrupdate',require('./routs/hr_update'));
+app.use('/api/rawstor',require('./routs/raw_stors'));
+app.use('/api/rawincoming',require('./routs/raw_incoming'));
+app.use('/api/productionbudget',require('./routs/production_vs_budget'));
+app.use('/api/budgetachievement',require('./routs/sales_budget_vs_achievement'));
+
  
 const PORT=process.env.PORT || 5000;
 
