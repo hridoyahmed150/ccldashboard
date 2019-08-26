@@ -29,6 +29,9 @@ app.use('/api/rawstor',require('./routs/raw_stors'));
 app.use('/api/rawincoming',require('./routs/raw_incoming'));
 app.use('/api/productionbudget',require('./routs/production_vs_budget'));
 app.use('/api/budgetachievement',require('./routs/sales_budget_vs_achievement'));
+app.use('/api/inflowoutflow',require('./routs/inflow_vs_outflow'));
+app.use('/api/creditupdate',require('./routs/credit_update'));
+app.use('/api/recipe',require('./routs/recipe'));
 
  
 const PORT=process.env.PORT || 5000;

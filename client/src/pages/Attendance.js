@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { Bar, Line } from 'react-chartjs-2';
-import {Badge,Button,Card,CardBody,CardDeck,CardGroup,CardHeader,CardTitle,Col,ListGroup,ListGroupItem,Row,} from 'reactstrap';
+import { Bar} from 'react-chartjs-2';
+import {Card,CardBody,CardHeader,Col,Row,} from 'reactstrap';
 import { getColor } from 'utils/colors';
 import Page from 'components/Page';
 

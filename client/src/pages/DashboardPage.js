@@ -1,16 +1,16 @@
-import { AnnouncementCard, TodosCard } from 'components/Card';
-import HorizontalAvatarList from 'components/HorizontalAvatarList';
-import MapWithBubbles from 'components/MapWithBubbles';
+// import { AnnouncementCard, TodosCard } from 'components/Card';
+// import HorizontalAvatarList from 'components/HorizontalAvatarList';
+// import MapWithBubbles from 'components/MapWithBubbles';
 import Page from 'components/Page';
 import axios from 'axios';
-import ProductMedia from 'components/ProductMedia';
-import SupportTicket from 'components/SupportTicket';
-import UserProgressTable from 'components/UserProgressTable';
+// import ProductMedia from 'components/ProductMedia';
+// import SupportTicket from 'components/SupportTicket';
+// import UserProgressTable from 'components/UserProgressTable';
 import { IconWidget, NumberWidget } from 'components/Widget';
-import { getStackLineChart, stackLineChartOptions } from 'demos/chartjs';
-import {avatarsData,chartjs,productsData,supportTicketsData,todosData,userProgressTableData,} from 'demos/dashboardPage';
+// import { getStackLineChart, stackLineChartOptions } from 'demos/chartjs';
+// import {avatarsData,chartjs,productsData,supportTicketsData,todosData,userProgressTableData,} from 'demos/dashboardPage';
 import React from 'react';
-import { Bar, Line , Pie ,Polar ,Bubble  } from 'react-chartjs-2';
+import { Bar, Line , Pie ,Polar ,Bubble,Doughnut  } from 'react-chartjs-2';
 import {MdBubbleChart,MdInsertChart,MdPersonPin,MdPieChart,MdRateReview,MdShare,MdShowChart,MdThumbUp,} from 'react-icons/md';
 import {Badge,Button,Card,CardBody,CardDeck,CardGroup,CardHeader,CardTitle,Col,ListGroup,ListGroupItem,Row,} from 'reactstrap';
 import { getColor } from 'utils/colors';
@@ -111,15 +111,39 @@ class DashboardPage extends React.Component {
        this.setState(newState);
          // console.log(this.state);
      })
-      axios.get(`/api/budgetachievement/details`)
+    axios.get(`/api/budgetachievement/details`)
       .then(res => {
         let newState={
-           ...this.state,
-           budgetachievement:res.data[0]
-         }
-       this.setState(newState);
-         // console.log(this.state);
-     })
+          ...this.state,
+          budgetachievement:res.data[0]
+      }
+     this.setState(newState);
+    })
+    axios.get(`/api/inflowoutflow/details`)
+      .then(res => {
+        let newState={
+          ...this.state,
+          inflowoutflow:res.data[0]
+        }
+      this.setState(newState);
+        // console.log(this.state);
+    })
+    axios.get(`/api/creditupdate/details`)
+     .then(res => {
+       let newState={
+          ...this.state,
+          creditupdate:res.data[0]
+        }
+      this.setState(newState);
+    })
+    axios.get(`/api/recipe/details`)
+     .then(res => {
+       let newState={
+          ...this.state,
+          recipe:res.data[0]
+        }
+      this.setState(newState);
+    })
   }
 
   componentDidMount() {
@@ -162,6 +186,17 @@ class DashboardPage extends React.Component {
     const salesBudget=[];
     const salesAchievement=[];
     const budgetTime=[];
+    const debitInflow=[];
+    const creditInflow=[];
+    const creditUpdate=[];
+    const recipeProductName=[];
+    const recipeDataset=[];
+    const recipenamearray=[];
+    const recipeClinker=[];
+    const recipeFlyash=[];
+    const receipeGypsum=[];
+    const recipeLimestone=[];
+    const recipeSlag=[];
 
 
     const gotosalesvscollection=()=>{
@@ -286,6 +321,31 @@ class DashboardPage extends React.Component {
         salesAchievement.push(item.achievement);
         budgetTime.push(item.name);
       })
+    }
+
+    if (this.state.inflowoutflow) {
+      this.state.inflowoutflow.map((item)=>{
+        debitInflow.push(item.totaldebit_amt);
+        creditInflow.push(item.total_credit_amt);
+      })
+    }
+    if (this.state.creditupdate) {
+      this.state.creditupdate.map(item=>{
+        creditUpdate.push(parseFloat(item.creditupdate));
+      })
+    }
+    
+
+    if (this.state.recipe) {
+      console.log(this.state.recipe);
+        this.state.recipe.map(item=>{
+          recipeProductName.push(item.prodname);
+          recipeClinker.push(item.clinkerqty);
+          recipeFlyash.push(item.flyashqty);
+          receipeGypsum.push(item.gypsumqty);
+          recipeLimestone.push(item.limestoneqty);
+          recipeSlag.push(item.slagqty)
+        })
     }
 
 
@@ -502,6 +562,111 @@ class DashboardPage extends React.Component {
         ],
       };
     };
+
+    const cashInflowVsOutflow = {
+        labels: myFormatDate,
+        datasets: [
+          {
+            label: 'Inflow',
+            backgroundColor: getColor('primary'),
+            borderColor: getColor('primary'),
+            borderWidth: 1,
+            data: debitInflow,
+            fill:false
+          },
+          {
+            label: 'Outflow',
+            backgroundColor: getColor('secondary'),
+            borderColor: getColor('secondary'),
+            borderWidth: 1,
+            data: creditInflow,
+            fill:false
+          },
+        ],
+        options: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                autoSkip: false,
+                maxRotation: 90,
+                minRotation: 90
+              }
+            }]
+          }
+        }
+    };
+    const creditUpdateData = () => {
+      return {
+        datasets: [
+          {
+            data:creditUpdate,
+            backgroundColor: [
+              getColor('primary'),
+              getColor('secondary'),
+              getColor('success'),
+              getColor('info'),
+              getColor('danger'),
+            ],
+            label: 'Total Credit',
+            toolTipContent:`heidh0p`,
+            value : 30,
+            color : "#F38630",
+            label : 'Sleep',
+            labelColor : 'white',
+            labelFontSize : '10',
+            labelAlign : 'left'
+          },
+        ],
+        // labels:myFormatDate,
+        labels:[`Total Credit ${creditUpdate[0]}`],
+        options: {
+        centerText: {
+            display: true,
+            text: `90%`
+          }
+        },
+         text: '23%'
+      };
+    };
+
+    const recipeData={
+      data: {
+        labels: recipeProductName,
+        datasets: [
+          {
+            label: 'Clinker',
+            backgroundColor: '#6a82fb',
+            stack: 'Expense',
+            data:recipeClinker,
+          },
+          {
+            label: 'Gypsum',
+            backgroundColor: '#fc5c7d',
+            stack: 'Expense',
+            data: receipeGypsum,
+          },
+          {
+            label: 'Limestone',
+            backgroundColor: '#630094',
+            stack: 'Expense',
+            data: recipeLimestone,
+          },
+          {
+            label: 'Flyash',
+            backgroundColor: '#009488',
+            stack: 'Expense',
+            data: recipeFlyash,
+          },
+          {
+            label: 'Slag',
+            backgroundColor: '#943800',
+            stack: 'Expense',
+            data: recipeSlag,
+          },
+        ],
+      }
+    };
+
     return (
       <Page
         className="DashboardPage"
@@ -683,6 +848,33 @@ class DashboardPage extends React.Component {
                <CardBody>
                  <Line data={budgetAchievementData()} onElementsClick={()=>budgetachievement()} />
                </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={12} lg={12} md={12}>
+            <Card>
+              <CardHeader>Cash Inflow And Outflow</CardHeader>
+              <CardBody>
+                <Line data={cashInflowVsOutflow} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xl={6} lg={12} md={12}>
+            <Card>
+              <CardHeader>Credit Update</CardHeader>
+              <CardBody>
+                <Doughnut data={creditUpdateData()} options={creditUpdateData().options} />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col lg="6" md="12" sm="12" xs="12">
+            <Card>
+              <CardHeader>Production vs Delivery</CardHeader>
+              <CardBody>
+                <Bar data={recipeData.data} />
+              </CardBody>
             </Card>
           </Col>
 
