@@ -159,10 +159,13 @@ class DashboardPage extends React.Component {
     const DAYS=Array.from({length: 30}, (v, k) => k+1);
     const saleData=[];
     const collectionData=[];
+    const salesAndCollectionDate=[];
     const deleveryQty=[];
     const productionQty=[];
+    const productionVsDeliveryDate=[];
     const purchaseData=[];
     const invoiceData=[];
+    const purchaseinvoiceDate=[];
     const totalEmpData=[];
     const attendenceData=[];
     const totalCollection=[];
@@ -215,26 +218,61 @@ class DashboardPage extends React.Component {
     }
 
     if (this.state.salesOrder) {
+      let month=[];
       this.state.salesOrder.map((item)=>{
         saleData.push(item.sales);
         collectionData.push(item.collection);
         lastMonthSales=item.sales;
+        month.push(item.dateacct);
+      })
+      month.map((item)=>{
+        var myDate;
+        let result =item.slice(0,10); 
+        let t = result.split("-");
+        if(t[2]) {
+          myDate = new Date(t[0], t[1]-1, t[2]);
+          salesAndCollectionDate.push(MONTHS[myDate.getMonth()+1]);
+        }
       })
     }
 
     if (this.state.production) {
+      let month=[];
       this.state.production.map((item)=>{
           deleveryQty.push(Math.floor(item.deliveryqty));
           productionQty.push(Math.floor(item.productionqty));
+          month.push(item.productiondate);
       })
+      month.map((item)=>{
+        var myDate;
+        let result =item.slice(0,10); 
+        let t = result.split("-");
+        if(t[2]) {
+          myDate = new Date(t[0], t[1]-1, t[2]);
+          productionVsDeliveryDate.push(MONTHS[myDate.getMonth()+1]);
+        }
+      })
+      console.log(productionVsDeliveryDate)
     }
 
     if (this.state.purchaseinvoice) {
+      let month=[];
       this.state.purchaseinvoice.map((item)=>{
         purchaseData.push(item.invgrandtotal);
-        invoiceData.push(item.pograndtotal)
+        invoiceData.push(item.pograndtotal);
+        month.push(item.podate)
+      })
+      month.map((item)=>{
+        var myDate;
+        let result =item.slice(0,10); 
+        let t = result.split("-");
+        if(t[2]) {
+          myDate = new Date(t[0], t[1]-1, t[2]);
+          purchaseinvoiceDate.push(MONTHS[myDate.getMonth()+1]);
+        }
       })
     }
+
     if (this.state.employeeAttendance) {
       this.state.employeeAttendance.map((item)=>{
         totalEmpData.push(item.totalemp);
@@ -348,13 +386,31 @@ class DashboardPage extends React.Component {
         })
     }
 
-
+    const salesandcollectionData={
+      labels:salesAndCollectionDate,
+      datasets:[
+        {
+          label: 'Sales',
+          backgroundColor: getColor('primary'),
+          borderColor: getColor('primary'),
+          borderWidth: 1,
+          data: saleData,
+        },
+        {
+          label: 'Collection',
+          backgroundColor: getColor('secondary'),
+          borderColor: getColor('secondary'),
+          borderWidth: 1,
+          data: collectionData,
+        },
+      ]
+    }
     const productDeleveryData={
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: productionVsDeliveryDate,
         datasets: [
           {
-            label: 'Delevery for this month',
+            label: 'Delivery for this month',
             backgroundColor: '#6a82fb',
             stack: 'Expense',
             data:deleveryQty,
@@ -419,7 +475,7 @@ class DashboardPage extends React.Component {
     };
     const purchaseinvoiceLineData = (moreData = {}, moreData2 = {}) => {
       return {
-        labels: MONTHS,
+        labels: purchaseinvoiceDate,
         datasets: [
           {
             label: 'Purchase',
@@ -731,11 +787,11 @@ class DashboardPage extends React.Component {
           <Col lg="6" md="12" sm="12" xs="12">
             <Card>
               <CardHeader>
-                Total Sales And Collection{' '}
+                Total Sales And Collection
                 <small className="text-muted text-capitalize">This year</small>
               </CardHeader>
               <CardBody>
-                <Bar data={genLineData} onElementsClick={()=>gotosalesvscollection()} />
+                <Bar data={salesandcollectionData} onElementsClick={()=>gotosalesvscollection()} />
               </CardBody>
             </Card>
           </Col>
@@ -819,7 +875,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col xl={12} lg={12} md={12}>
+          <Col xl={12} lg={12} md={12} sm={12}>
             <Card>
               <CardHeader>RAW Store</CardHeader>
               <CardBody>
@@ -828,7 +884,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col lg="6" md="12" sm="12" xs="12">
+          <Col lg="6" md="12" sm="12" xs="12" sm={12}>
             <Card>
               <CardHeader>
                 Production Vs Budget
@@ -840,7 +896,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col xl={6} lg={12} md={12}>
+          <Col xl={6} lg={12} md={12} sm={12}>
             <Card>
                <CardBody>
                  Sales - Budget Vs Achievement
@@ -851,7 +907,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col xl={12} lg={12} md={12}>
+          <Col xl={12} lg={12} md={12} sm={12}>
             <Card>
               <CardHeader>Cash Inflow And Outflow</CardHeader>
               <CardBody>
@@ -860,7 +916,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col xl={6} lg={12} md={12}>
+          <Col xl={6} lg={12} md={12} sm={12}>
             <Card>
               <CardHeader>Credit Update</CardHeader>
               <CardBody>
@@ -869,7 +925,7 @@ class DashboardPage extends React.Component {
             </Card>
           </Col>
 
-          <Col lg="6" md="12" sm="12" xs="12">
+          <Col lg="6" md="12" sm="12" xs="12" sm={12}>
             <Card>
               <CardHeader>Production vs Delivery</CardHeader>
               <CardBody>

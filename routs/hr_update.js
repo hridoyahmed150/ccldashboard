@@ -15,19 +15,12 @@ and bp.isactive ='Y'
 group by 1
 order by dept.name`;
 router.get('/details',(req,res)=>{
-
-	// res.send('hello');
 	db
   .query(employeeAttendance, { raw: true })
   .then(projects => {
     res.json(projects);
   })
-	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})
-	// SalesOrder.findAll()
-	// .then((salesorder)=>{console.log(salesorder)})
-	// .catch((err)=>{
-	// 	console.log(err);
-	// })
+
 })
 
 module.exports=router;

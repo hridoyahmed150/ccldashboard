@@ -17,19 +17,11 @@ left join M_Production p on (p.m_production_id=pp.M_production_id)
 GROUP BY 1) production on (production.productiondate=budget.budgetdate)
 order by 1 desc`;
 router.get('/details',(req,res)=>{
-
-	// res.send('hello');
 	db
   .query(rawStors, { raw: true })
   .then(projects => {
     res.json(projects);
   })
-	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})
-	// SalesOrder.findAll()
-	// .then((salesorder)=>{console.log(salesorder)})
-	// .catch((err)=>{
-	// 	console.log(err);
-	// })
 })
 
 module.exports=router;

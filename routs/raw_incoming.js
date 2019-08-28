@@ -16,19 +16,11 @@ and pc.value like '%RawMaterial%'
 group by 1
 order by 1 desc`;
 router.get('/details',(req,res)=>{
-
-	// res.send('hello');
 	db
   .query(rawIncoming, { raw: true })
   .then(projects => {
     res.json(projects);
   })
-	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})
-	// SalesOrder.findAll()
-	// .then((salesorder)=>{console.log(salesorder)})
-	// .catch((err)=>{
-	// 	console.log(err);
-	// })
 })
 
 module.exports=router;

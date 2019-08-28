@@ -14,19 +14,11 @@ order by 1 desc
 limit 12
 `
 router.get('/details',(req,res)=>{
-
-	// res.send('hello');
 	db
   .query(inflowVsOutflow, { raw: true })
   .then(projects => {
     res.json(projects);
   })
-	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})
-	// SalesOrder.findAll()
-	// .then((salesorder)=>{console.log(salesorder)})
-	// .catch((err)=>{
-	// 	console.log(err);
-	// })
 })
 
 module.exports=router;

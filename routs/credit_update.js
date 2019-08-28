@@ -12,19 +12,11 @@ where isCustomer='Y'
 and isActive='Y'
 `
 router.get('/details',(req,res)=>{
-
-	// res.send('hello');
 	db
   .query(creditUpdate, { raw: true })
   .then(projects => {
     res.json(projects);
   })
-	//db.query("SELECT * FROM `t_transport_type`", { type: db.QueryTypes.SELECT})
-	// SalesOrder.findAll()
-	// .then((salesorder)=>{console.log(salesorder)})
-	// .catch((err)=>{
-	// 	console.log(err);
-	// })
 })
 
 module.exports=router;
