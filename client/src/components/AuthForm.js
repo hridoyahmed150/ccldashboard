@@ -1,9 +1,17 @@
 import logo200Image from 'assets/img/logo/confidence logo.png';
 import PropTypes from 'prop-types';
 import React from 'react';
+import axios from 'axios';
+
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 
 class AuthForm extends React.Component {
+  state={
+    name:'',
+    password:'',
+    isactive:"",
+    errors:{}
+  }
   get isLogin() {
     return this.props.authState === STATE_LOGIN;
   }
@@ -18,8 +26,19 @@ class AuthForm extends React.Component {
     this.props.onChangeAuthState(authState);
   };
 
+  handelChange=(e)=>{
+    this.setState({[e.target.name]:e.target.value})
+  }
+
   handleSubmit = event => {
     event.preventDefault();
+    let user={
+      name:this.state.name,
+      password:this.state.password
+    }
+    axios.post('/api/users/login',user)
+      .then(user=>console.log(user))
+      .catch(err=>console.log(err))
   };
 
   renderButtonText() {
@@ -63,12 +82,12 @@ class AuthForm extends React.Component {
           </div>
         )}
         <FormGroup>
-          <Label for={usernameLabel}>{usernameLabel}</Label>
-          <Input {...usernameInputProps} />
+          <Label for="name">Name</Label>
+          <Input name ="name" onChange={this.handelChange} type='text' />
         </FormGroup>
         <FormGroup>
           <Label for={passwordLabel}>{passwordLabel}</Label>
-          <Input {...passwordInputProps} />
+          <Input name="password" onChange={this.handelChange} {...passwordInputProps} />
         </FormGroup>
         {this.isSignup && (
           <FormGroup>
@@ -84,25 +103,27 @@ class AuthForm extends React.Component {
         </FormGroup>
         <hr />
         <Button
-          size="lg"
+          size="lg" 
+          type="submit"
           className="bg-gradient-theme-left border-0"
           block
-          onClick={this.handleSubmit}>
+          >
           {this.renderButtonText()}
         </Button>
 
         <div className="text-center pt-1">
-          <h6>or</h6>
           <h6>
             {this.isSignup ? (
               <a href="#login" onClick={this.changeAuthState(STATE_LOGIN)}>
                 Login
               </a>
-            ) : (
-              <a href="#signup" onClick={this.changeAuthState(STATE_SIGNUP)}>
-                Signup
-              </a>
-            )}
+            ) : ''
+            // (
+            //   <a href="#signup" onClick={this.changeAuthState(STATE_SIGNUP)}>
+            //     Signup
+            //   </a>
+            // )
+          }
           </h6>
         </div>
 

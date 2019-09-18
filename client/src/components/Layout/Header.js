@@ -2,6 +2,13 @@ import Avatar from 'components/Avatar';
 import { UserCard } from 'components/Card';
 // import Notifications from 'components/Notifications';
 import SearchInput from 'components/SearchInput';
+import PropTypes from "prop-types";
+import {connect } from 'react-redux';
+import {Link} from 'react-router-dom';
+import { withRouter } from "react-router";
+
+
+import {logoutUser} from "../../actions/authAction";
 // import { notificationsData } from 'demos/header';
 import withBadge from 'hocs/withBadge';
 import React from 'react';
@@ -45,6 +52,7 @@ const bem = bn.create('header');
 //   children: <small>5</small>,
 // })(MdNotificationsActive);
 
+
 class Header extends React.Component {
   state = {
     isOpenNotificationPopover: false,
@@ -75,7 +83,34 @@ class Header extends React.Component {
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
+  onLogoutClick=(e)=>{
+    e.preventDefault();
+    this.props.logoutUser(this.props.history);
+  }
+
   render() {
+
+    const {isAuthenticated , user} =this.props.auth;
+    const authLink=(
+        <Nav className="ml-auto" navbar>
+          <NavItem>
+            <a 
+              style={{color:'black'}}
+              href='' 
+              onClick={this.onLogoutClick} 
+              className='nav-link'>
+              Logout
+            </a>
+          </NavItem>
+        </Nav>
+      )
+    const gestLink=(
+        <Nav className="ml-auto" navbar>
+          <NavItem>
+            <Link to="/login" className='nav-link'>Login</Link>
+          </NavItem> 
+        </Nav>
+      )
     // const { isNotificationConfirmed } = this.state;
 
     return (
@@ -127,45 +162,9 @@ class Header extends React.Component {
                 onClick={this.toggleUserCardPopover}
                 className="can-click"
               />
+              {isAuthenticated?authLink:gestLink}
             </NavLink>
-            <Popover
-              placement="bottom-end"
-              isOpen={this.state.isOpenUserCardPopover}
-              toggle={this.toggleUserCardPopover}
-              target="Popover2"
-              className="p-0 border-0"
-              style={{ minWidth: 250 }}
-            >
-              <PopoverBody className="p-0 border-light">
-                <UserCard
-                  title="MD"
-                  subtitle="jane@jane.com"
-                  text=""
-                  className="border-light"
-                >
-                  <ListGroup flush>
-                    {/*<ListGroupItem tag="button" action className="border-light">
-                      <MdPersonPin /> Profile
-                    </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdInsertChart /> Stats
-                    </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdMessage /> Messages
-                    </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdSettingsApplications /> Settings
-                    </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdHelp /> Help
-                    </ListGroupItem>*/}
-                    <ListGroupItem tag="button" action className="border-light signoutbutton">
-                      <MdExitToApp /> Signout
-                    </ListGroupItem>
-                  </ListGroup>
-                </UserCard>
-              </PopoverBody>
-            </Popover>
+            
           </NavItem>
         </Nav>
       </Navbar>
@@ -173,4 +172,12 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+Header.propTypes={
+  logoutUser:PropTypes.func.isRequired,
+  auth:PropTypes.object.isRequired
+}
+const mapStateToProps=(state)=>({
+  auth:state.auth,
+})
+
+export default connect(mapStateToProps,{logoutUser})(withRouter(Header));

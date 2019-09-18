@@ -1,13 +1,22 @@
+import React from 'react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { STATE_LOGIN, STATE_SIGNUP } from 'components/AuthForm';
+import {Provider} from 'react-redux';
+import store from './store';
+import jwt_decode from 'jwt-decode';
+import setAuthToken from './utils/setAuthToken';
 import GAListener from 'components/GAListener';
+import {setCurrentUser,logoutUser} from "./actions/authAction"
+
 import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
+
 import PageSpinner from 'components/PageSpinner';
 import AuthPage from 'pages/AuthPage';
-import React from 'react';
-import componentQueries from 'react-component-queries';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import './styles/reduction.scss';
 
+import Login from './components/auth/Login';
+import componentQueries from 'react-component-queries';
+import './styles/reduction.scss';
+const Landing =React.lazy(()=>import('./components/Layout/Landing'))
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
 const AuthModalPage = React.lazy(() => import('pages/AuthModalPage'));
 const BadgePage = React.lazy(() => import('pages/BadgePage'));
@@ -34,32 +43,40 @@ const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
 };
 
+// check for token 
+if (localStorage.jwtToken) {
+  // set auth token header auth 
+  setAuthToken(localStorage.jwtToken)
+  // decode token and get user info and exp 
+
+  const decoded =jwt_decode(localStorage.jwtToken)
+  // set user and isauthenticated
+  store.dispatch(setCurrentUser(decoded)); 
+
+  // check for expired token 
+  const currentTime=Date.now()/1000;
+  if (decoded.exp< currentTime) {
+    //logOut user
+    store.dispatch(logoutUser())
+    // clear current profile
+    //redirect to login 
+    window.location.href='/login';
+  }
+}
+
 class App extends React.Component {
   render() {
     return (
+    <Provider store={store}>
+
       <BrowserRouter basename={getBasename()}>
         <GAListener>
           <Switch>
-            <LayoutRoute
-              exact
-              path="/login"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
-              )}
-            />
-            <LayoutRoute
-              exact
-              path="/signup"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_SIGNUP} />
-              )}
-            />
-
             <MainLayout breakpoint={this.props.breakpoint}>
               <React.Suspense fallback={<PageSpinner />}>
-                <Route exact path="/" component={DashboardPage} />
+                <Route exact path="/" component={Landing} />
+                <Route exact path="/dashboard" component={DashboardPage} />
+                <Route exact path="/login" component={Login} />
                 <Route exact path="/login-modal" component={AuthModalPage} />
                 <Route exact path="/buttons" component={ButtonPage} />
                 <Route exact path="/cards" component={CardPage} />
@@ -86,6 +103,8 @@ class App extends React.Component {
           </Switch>
         </GAListener>
       </BrowserRouter>
+    </Provider>
+
     );
   }
 }

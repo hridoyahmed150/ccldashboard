@@ -22,22 +22,37 @@ class SalesvsCollection extends React.Component{
   }
   render(){
     const saleData=[];
-    const collectionData=[];
-    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    
+    const collectionData=[]; 
+    const salesvscollectionDate=[];  
+
+    const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 
     let lastMonthSales='';
     if (this.state.salesOrder) {
+      let month=[];
       this.state.salesOrder.map((item)=>{
         saleData.push(item.sales);
         collectionData.push(item.collection);
         lastMonthSales=item.sales;
+        month.push(item.dateacct);
+      })
+      month.map((item)=>{
+        if (item) {
+          var myDate;
+          let result =item.slice(0,10); 
+          let t = result.split("-");
+          if(t[2]) {
+            myDate = new Date(t[0], t[1]-1, t[2]);
+            salesvscollectionDate.push(MONTHS[myDate.getMonth()+1]);
+          }
+        }
       })
     }
 
     const genLineData = (moreData = {}, moreData2 = {}) => {
       return {
-        labels: MONTHS,
+        labels: salesvscollectionDate,
         datasets: [
           {
             label: 'Sales',
@@ -73,7 +88,9 @@ class SalesvsCollection extends React.Component{
                 <small className="text-muted text-capitalize">This year</small>
               </CardHeader>
               <CardBody>
-                <Bar data={genLineData} />
+                <Bar data={genLineData}  getElementsAtEvent={(elems) => {
+                  console.log(elems);
+                }}/>
               </CardBody>
             </Card>
           </Col>

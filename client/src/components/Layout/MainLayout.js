@@ -1,4 +1,4 @@
-import { Content, Footer, Header, Sidebar } from 'components/Layout';
+import { Content, Footer, Header, Sidebar,Landing } from 'components/Layout';
 import React from 'react';
 import axios from 'axios';
 import {MdImportantDevices,
@@ -35,19 +35,6 @@ class MainLayout extends React.Component {
         level: 'info',
       });
     }, 1500);
-
-    // setTimeout(() => {
-    //   if (!this.notificationSystem) {
-    //     return;
-    //   }
-
-    //   this.notificationSystem.addNotification({
-    //     title: <MdLoyalty />,
-    //     message:
-    //       'Reduction is carefully designed template powered by React and Bootstrap4!',
-    //     level: 'info',
-    //   });
-    // }, 2500);
   }
 
   // close sidebar when

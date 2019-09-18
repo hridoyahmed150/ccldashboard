@@ -373,7 +373,6 @@ class DashboardPage extends React.Component {
       })
     }
     
-
     if (this.state.recipe) {
       console.log(this.state.recipe);
         this.state.recipe.map(item=>{
@@ -416,7 +415,7 @@ class DashboardPage extends React.Component {
             data:deleveryQty,
           },
           {
-            label: 'Production for last month',
+            label: 'Production for this month',
             backgroundColor: '#fc5c7d',
             stack: 'Expense',
             data: productionQty,
@@ -791,7 +790,7 @@ class DashboardPage extends React.Component {
                 <small className="text-muted text-capitalize">This year</small>
               </CardHeader>
               <CardBody>
-                <Bar data={salesandcollectionData} onElementsClick={()=>gotosalesvscollection()} />
+                <Bar data={salesandcollectionData} onElementsClick={()=>gotosalesvscollection()}/>
               </CardBody>
             </Card>
           </Col>
@@ -858,7 +857,7 @@ class DashboardPage extends React.Component {
           <Col xl={6} lg={12} md={12}>
             <Card>
                <CardBody>
-                 Row Incoming
+                 Raw Incoming
                </CardBody> 
                <CardBody>
                  <Line data={rawIncomingBubbleData} />
