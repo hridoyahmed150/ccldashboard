@@ -6,7 +6,7 @@ const db=require('../config/database');
 const SalesOrder=require('../models/SalesOrder');
 
 const rawStors=`
-select locator.value storname,sum(tns.movementqty) storqty from M_Transaction tns
+select locator.value storname,ROUND(sum(tns.movementqty),2) storqty from M_Transaction tns
 left join m_product pro on (pro.m_product_id=tns.m_product_id)
 left join M_Locator locator on (locator.m_locator_id=tns.m_locator_id)
 left join M_Product_Category pc on (pc.M_Product_Category_id=pro.M_Product_Category_id)

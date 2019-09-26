@@ -8,7 +8,7 @@ import Page from 'components/Page';
 
 class Attendance extends React.Component{
   state = {
-   selectedOption: {value: "budgetachievement", label: "Quarterly"},
+   selectedOption: {value: "details", label: "Quarterly"},
   };
 
   handleChange = selectedOption => {
@@ -17,7 +17,7 @@ class Attendance extends React.Component{
                       });
       };
 componentWillMount(){
-    axios.get(`/api/${this.state.selectedOption.value}/details`)
+    axios.get(`/api/budgetachievement/${this.state.selectedOption.value}`)
      .then(res => {
        let newState={
           ...this.state,
@@ -29,7 +29,7 @@ componentWillMount(){
   componentDidUpdate(prevState,nextState){
     if (this.state.selectedOption.value !== nextState.selectedOption.value) {
        let apivalue=this.state.selectedOption.value;
-       axios.get(`/api/${apivalue}/details`)
+       axios.get(`/api/budgetachievement/${apivalue}`)
              .then(res=>{
                let newState={
                  ...this.state,
@@ -45,16 +45,17 @@ componentWillMount(){
     const salesAchievement=[];
     const budgetTime=[];
     const options = [
-      { value: 'budgetachievement', label: 'Monthly' },
-      { value: 'employeeAttendance', label: 'Quarterly' },
-      { value: 'budgetachievementyearly', label: 'Yearly' },
+      { value: 'monthly', label: 'Monthly' },
+      { value: 'quaterly', label: 'Quarterly' },
+      { value: 'yearly', label: 'Yearly' },
     ];
 
     if (this.state.budgetachievement) {
       this.state.budgetachievement.map((item)=>{
         salesBudget.push(item.budget);
         salesAchievement.push(item.achievement);
-        budgetTime.push(item.name);
+        let labels=item.labels.slice(0,10)
+        budgetTime.push(labels);
       })
     } 
 

@@ -10,7 +10,7 @@ select date_trunc('month',io.MovementDate) date ,sum(iol.QtyEntered) total from 
 left join M_InOut io on (io.M_InOut_id=iol.M_InOut_id)
 left join m_product pro on (pro.m_product_id=iol.m_product_id)
 left join M_Product_Category pc on (pc.M_Product_Category_id=pro.M_Product_Category_id)
-where io.issotrx='N' 
+where io.issotrx='N' and io.docstatus in ('CO' , 'CL') 
 and io.ad_client_id=1000000
 and pc.value like '%RawMaterial%'
 group by 1

@@ -30,7 +30,6 @@ class DashboardPage extends React.Component {
   componentWillMount(){
     axios.get(`/api/salesorder/details`)
       .then(res => {
-        // console.log(res.data[0]);
         let newState={
           ...this.state,
           salesOrder:res.data[0]
@@ -44,7 +43,6 @@ class DashboardPage extends React.Component {
           ...this.state,
           production:res.data[0]
         }
-        // console.log(res.data[0]);
       this.setState(newState);
     })
      axios.get(`/api/purchaseinvoice/details`)
@@ -53,7 +51,6 @@ class DashboardPage extends React.Component {
           ...this.state,
           purchaseinvoice:res.data[0]
         }
-        // console.log(res.data[0]);
       this.setState(newState);
     })
 
@@ -63,7 +60,7 @@ class DashboardPage extends React.Component {
           ...this.state,
           employeeAttendance:res.data[0]
         }
-        // console.log(res.data[0]);
+
       this.setState(newState);
     })
 
@@ -74,7 +71,7 @@ class DashboardPage extends React.Component {
           collection:res.data[0]
         }
       this.setState(newState);
-        // console.log(this.state);
+
     })
       axios.get(`/api/hrupdate/details`)
       .then(res => {
@@ -83,7 +80,7 @@ class DashboardPage extends React.Component {
            hrupdate:res.data[0]
          }
        this.setState(newState);
-         // console.log(this.state);
+
      })
       axios.get(`/api/rawstor/details`)
       .then(res => {
@@ -100,7 +97,7 @@ class DashboardPage extends React.Component {
            rawincoming:res.data[0]
          }
        this.setState(newState);
-         // console.log(this.state);
+
      })
       axios.get(`/api/productionbudget/details`)
       .then(res => {
@@ -109,7 +106,7 @@ class DashboardPage extends React.Component {
            productionbudget:res.data[0]
          }
        this.setState(newState);
-         // console.log(this.state);
+
      })
     axios.get(`/api/budgetachievement/details`)
       .then(res => {
@@ -126,7 +123,7 @@ class DashboardPage extends React.Component {
           inflowoutflow:res.data[0]
         }
       this.setState(newState);
-        // console.log(this.state);
+
     })
     axios.get(`/api/creditupdate/details`)
      .then(res => {
@@ -252,14 +249,13 @@ class DashboardPage extends React.Component {
           productionVsDeliveryDate.push(MONTHS[myDate.getMonth()+1]);
         }
       })
-      console.log(productionVsDeliveryDate)
     }
 
     if (this.state.purchaseinvoice) {
       let month=[];
       this.state.purchaseinvoice.map((item)=>{
-        purchaseData.push(item.invgrandtotal);
-        invoiceData.push(item.pograndtotal);
+        purchaseData.push(item.pograndtotal);
+        invoiceData.push(item.invgrandtotal);
         month.push(item.podate)
       })
       month.map((item)=>{
@@ -274,10 +270,31 @@ class DashboardPage extends React.Component {
     }
 
     if (this.state.employeeAttendance) {
+      let day=[];
+      var myDay=[];
       this.state.employeeAttendance.map((item)=>{
         totalEmpData.push(item.totalemp);
         attendenceData.push(item.totalattend)
+        day.push(item.days)
       })
+      console.log(day)
+
+
+
+      day.map(date=>{
+        let result = date.slice(0,10);
+        let t=result.split('-');
+        let currentMonth = new Date().getMonth()+1
+
+        // console.log(parseInt(t[1]),currentMonth)
+        if (currentMonth==parseInt(t[1])) {
+        myDay.push(parseInt(t[2] )+1)
+        }
+      })
+      // DAYS.map(item , index=>{
+      //   if (item==) {}
+      // })
+
     }
 
     if (this.state.collection) {
@@ -303,10 +320,8 @@ class DashboardPage extends React.Component {
         hrAttend.push(item.attendcount);
       })
       hrDepartmentName.map((item)=>{
-        // console.log(item);
         if (item!==null) {
           newName.push(item.split(" ").map((i)=>i.charAt(0)).join(""));
-          // console.log('hello')
         }
       })
     }
@@ -374,7 +389,6 @@ class DashboardPage extends React.Component {
     }
     
     if (this.state.recipe) {
-      console.log(this.state.recipe);
         this.state.recipe.map(item=>{
           recipeProductName.push(item.prodname);
           recipeClinker.push(item.clinkerqty);
@@ -459,7 +473,7 @@ class DashboardPage extends React.Component {
     };
     const Attendance= (moreData = {}, moreData2 = {}) => {
       return {
-        labels: DAYS,
+        labels: myDay,
         datasets: [
           {
             label: 'Attendance',
@@ -530,7 +544,7 @@ class DashboardPage extends React.Component {
         labels: newName,
         datasets: [
           {
-            label: 'Total Employee',
+            label: 'Department Wise Employee',
             backgroundColor: getColor('primary'),
             borderColor: getColor('primary'),
             borderWidth: 1,
@@ -733,11 +747,11 @@ class DashboardPage extends React.Component {
             <NumberWidget
               title="Total Sales"
               subtitle="This month"
-              number={lastMonthSales}
+              number={saleData[0]}
               color="secondary"
               progress={{
                 value: 75,
-                label: 'Last month',
+                label: MONTHS[`${new Date().getMonth()}`],
               }}
             />
           </Col>
@@ -746,11 +760,11 @@ class DashboardPage extends React.Component {
             <NumberWidget
               title="Total Purchase"
               subtitle="This month"
-              number="5,400"
+              number={purchaseData[0]}
               color="secondary"
               progress={{
                 value: 45,
-                label: 'Last month',
+                label: MONTHS[`${new Date().getMonth()}`],
               }}
             />
           </Col>
@@ -759,11 +773,11 @@ class DashboardPage extends React.Component {
             <NumberWidget
               title="Total Collection"
               subtitle="This month"
-              number="3,400"
+              number={collectionData[0]}
               color="secondary"
               progress={{
                 value: 90,
-                label: 'Last month',
+                label: MONTHS[`${new Date().getMonth()}`],
               }}
             />
           </Col>
@@ -772,11 +786,11 @@ class DashboardPage extends React.Component {
             <NumberWidget
               title="Total Production"
               subtitle="This month"
-              number="38%"
+              number={productionQty[0]}
               color="secondary"
               progress={{
                 value: 60,
-                label: 'Last month',
+                label: MONTHS[`${new Date().getMonth()}`],
               }}
             />
           </Col>

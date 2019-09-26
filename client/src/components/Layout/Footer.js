@@ -9,7 +9,7 @@ const Footer = () => {
     <Navbar>
       <Nav navbar>
         <NavItem>
-          Confidence Cement Limited 
+         {/* Confidence Cement Limited*/} 
         </NavItem>
       </Nav>
     </Navbar>

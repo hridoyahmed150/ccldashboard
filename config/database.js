@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = new Sequelize('ccl_040819', 'adempiere', 'adempiere', {
+module.exports = new Sequelize('ccl300619', 'adempiere', 'adempiere', {
   host: 'localhost',
   dialect: 'postgres',
   pool: {

@@ -15,6 +15,7 @@ GROUP BY 1) budget
 full join (select date_trunc('month', p.movementdate) productiondate , sum(pp.productionqty) productionqty from M_ProductionPlan pp
 left join M_Production p on (p.m_production_id=pp.M_production_id) 
 GROUP BY 1) production on (production.productiondate=budget.budgetdate)
+where coalesce(budget.budgetdate, production.productiondate) is not null
 order by 1 desc`;
 router.get('/details',(req,res)=>{
 	db
